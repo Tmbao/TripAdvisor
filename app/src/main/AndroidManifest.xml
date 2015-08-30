@@ -28,6 +28,10 @@
             android:name=".visible_components.activities.LandscapeDetailActivity"
             android:label="@string/title_activity_landscape_detail" >
         </activity>
+        <activity
+            android:name=".visible_components.activities.VisualSearchActivity"
+            android:label="@string/title_activity_visual_search" >
+        </activity>
     </application>
 
 </manifest>

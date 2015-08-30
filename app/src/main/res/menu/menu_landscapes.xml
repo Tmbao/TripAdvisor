@@ -9,4 +9,7 @@
         android:icon="@android:drawable/ic_menu_search"
         app:showAsAction="always|collapseActionView"
         app:actionViewClass="android.support.v7.widget.SearchView" />
+    <item android:id="@+id/visual_search"
+        android:title="@string/visual_search"
+        app:showAsAction="never" />
 </menu>

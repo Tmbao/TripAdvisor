@@ -77,7 +77,7 @@ public class LandscapesActivity extends AppCompatActivity {
 
         @Override
         public Filter getFilter() {
-            return new LandscapeFilter(this, landscapeList);
+            return new LandscapeFilter(this, allLandscapes);
         }
 
         public class LandscapeViewHolder extends RecyclerView.ViewHolder {
@@ -133,9 +133,9 @@ public class LandscapesActivity extends AppCompatActivity {
                 for (final Landscape landscape : allLandscapes) {
                     int countMatch = 0;
                     for (final String token : tokens) {
-                        if (landscape.getName().contains(token))
+                        if (landscape.getName().toLowerCase().contains(token))
                             ++countMatch;
-                        else if (landscape.getDescription().contains(token))
+                        else if (landscape.getDescription().toLowerCase().contains(token))
                             ++countMatch;
                     }
                     if (countMatch == tokens.size())
@@ -210,11 +210,10 @@ public class LandscapesActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-
+        if (id == R.id.visual_search) {
+            Intent intent = new Intent(this, VisualSearchActivity.class);
+            startActivity(intent);
+        }
 
         return super.onOptionsItemSelected(item);
     }
