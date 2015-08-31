@@ -73,14 +73,20 @@ public class JSONHelpers {
         return createRetrievedLandscape(new JSONObject(jsonString));
     }
 
+    public static int getRetrievedLandscapeId(String jsonString) throws JSONException {
+        return new JSONObject(jsonString).getInt("id");
+    }
+
     public static RetrievedLandscape createRetrievedLandscape(JSONObject jsonObject) throws JSONException {
         int id = jsonObject.getInt("id");
         RetrievedLandscape.Status status = RetrievedLandscape.Status.parse(jsonObject.getString("get_status"));
 
         List<String> content = new ArrayList<>();
-        JSONArray jsonArray = jsonObject.getJSONArray("content");
-        for (int index = 0; index < jsonArray.length(); index++)
-            content.add(jsonArray.getString(index));
+        if (status == RetrievedLandscape.Status.COMPLETED) {
+            JSONArray jsonArray = jsonObject.getJSONArray("content");
+            for (int index = 0; index < jsonArray.length(); index++)
+                content.add(jsonArray.getString(index));
+        }
 
         return new RetrievedLandscape(id, status, content);
     }

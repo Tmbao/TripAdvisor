@@ -41,11 +41,11 @@ public class ClientHelpers {
         parts.add(new Requests.FormData("content", Requests.FormData.Type.FILE, fileName));
 
         HttpResponse response = Requests.post(UrlHelpers.getRequestUrl(), parts);
-        if (response.getCode() == 200) {
-            int responseId = Integer.parseInt(response.getContent());
+        if (response.getCode() == 200 || response.getCode() == 201) {
+            int responseId = JSONHelpers.getRetrievedLandscapeId(response.getContent());
             while (true) {
                 response = Requests.get(UrlHelpers.getResponseLandscapeUrl(responseId), null);
-                if (response.getCode() == 200) {
+                if (response.getCode() == 200 || response.getCode() == 201) {
                     RetrievedLandscape retrievedLandscape = JSONHelpers.createRetrievedLandscape(response.getContent());
                     if (retrievedLandscape.getStatus() == RetrievedLandscape.Status.COMPLETED) {
 //                        Use KNN with K = sqrt(size(ranked_list))

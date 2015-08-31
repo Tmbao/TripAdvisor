@@ -6,7 +6,9 @@ import android.util.Pair;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -37,18 +39,25 @@ public class Requests {
             this.content = content;
         }
 
-        public String toString() {
+        public void writeData(DataOutputStream dataOutputStream) throws IOException {
             switch (contentType) {
                 case FILE:
-//                Check if file name is correct
-                    if (new File(content).isFile())
-                        return String.format("Content-Disposition: form-data; name=\"%s\"; filename=\"%s\"\r\nContent-Type: application/x-zip-compressed\r\n", key, content);
-                    else
-                        return "";
+                    File file = new File(content);
+                    if (file.exists() && file.isFile()) {
+                        dataOutputStream.writeBytes(String.format("Content-Disposition: form-data; name=\"%s\"; filename=\"%s\"%s", key, content, crlf));
+                        dataOutputStream.writeBytes(crlf);
+
+                        byte[] buffer = new byte[BUFFER_SIZE];
+                        FileInputStream inputStream = new FileInputStream(file);
+                        for (int readSize; (readSize = inputStream.read(buffer)) > 0; )
+                            dataOutputStream.write(buffer, 0, readSize);
+                    }
+                    break;
                 case TEXT:
-                    return String.format("Content-Disposition: form-data; name=\"%s\"\r\n\r\n%s\r\n", key, content);
-                default:
-                    return "";
+                    dataOutputStream.writeBytes(String.format("Content-Disposition: form-data; name=\"%s\"%s", key, crlf));
+                    dataOutputStream.writeBytes(crlf);
+                    dataOutputStream.writeBytes(content);
+                    break;
             }
         }
     }
@@ -56,8 +65,8 @@ public class Requests {
     private static final int TIMEOUT_LIMIT = 10000;
     private static final int BUFFER_SIZE = 4096;
     private static String twoHyphens = "--";
-    private static String boundary = "";
-    private static String lineEnd = "\r\n";
+    private static String boundary = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+    private static String crlf = "\r\n";
 
     private static void grantNetworkPermission() {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -84,7 +93,7 @@ public class Requests {
 //        Send request and receive response
         int responseCode = connection.getResponseCode();
         String responseContent = "";
-        if (responseCode == 200) {
+        if (responseCode == 200 || responseCode == 201) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
             for (String line; (line = reader.readLine()) != null; )
                 responseContent += line;
@@ -123,21 +132,19 @@ public class Requests {
 
 //        Setup request data
         connection.setRequestProperty("Connection", "Keep-Alive");
-        connection.setRequestProperty("Content-Type", String.format("multipart/form-data;boundary=%s", boundary));
+        connection.setRequestProperty("Content-Type", String.format("multipart/form-data; boundary=%s", boundary));
 
         DataOutputStream dataOutputStream = new DataOutputStream(connection.getOutputStream());
 
         if (parameters != null)
             for (FormData parameter : parameters) {
-                String parameterString = parameter.toString();
 
-                if (!parameterString.equals("")) {
-                    dataOutputStream.writeBytes(twoHyphens + boundary + lineEnd);
-                    dataOutputStream.writeBytes(lineEnd);
-                    dataOutputStream.writeBytes(parameterString);
-                    dataOutputStream.writeBytes(lineEnd);
-                }
+                dataOutputStream.writeBytes(twoHyphens + boundary + crlf);
+                parameter.writeData(dataOutputStream);
+                dataOutputStream.writeBytes(crlf);
             }
+
+        dataOutputStream.writeBytes(twoHyphens + boundary + twoHyphens + crlf);
 
         dataOutputStream.flush();
         dataOutputStream.close();
@@ -145,7 +152,7 @@ public class Requests {
 //        Send request and receive response
         int responseCode = connection.getResponseCode();
         String responseContent = "";
-        if (responseCode == 200) {
+        if (responseCode == 200 || responseCode == 201) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
             for (String line; (line = reader.readLine()) != null; )
                 responseContent += line;
