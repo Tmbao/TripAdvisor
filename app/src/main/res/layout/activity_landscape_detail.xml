@@ -68,16 +68,19 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:paddingRight="5dp"
-                    android:src="@drawable/wiki_icon"/>
+                    android:src="@drawable/wiki_icon"
+                    android:onClick="onWikiButtonClick"/>
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:paddingRight="5dp"
-                    android:src="@drawable/website_icon"/>
+                    android:src="@drawable/website_icon"
+                    android:onClick="onWebsiteButtonClick"/>
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/youtube_icon"/>
+                    android:src="@drawable/youtube_icon"
+                    android:onClick="onYoutubeButtonClick"/>
             </LinearLayout>
             <TextView
                 android:layout_width="match_parent"

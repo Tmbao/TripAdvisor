@@ -1,9 +1,12 @@
 package app.tmbao.travel_assistance.visible_components.activities;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.daimajia.slider.library.Animations.DescriptionAnimation;
@@ -26,6 +29,7 @@ public class LandscapeDetailActivity extends AppCompatActivity {
 
     private SliderLayout mDemoSlider;
     private int landscapeID;
+    private List<LandscapeResource> landscapeResources;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +42,7 @@ public class LandscapeDetailActivity extends AppCompatActivity {
 
         Landscape landscape = LandscapeStorage.getInstance().getLandscapes().get(landscapeID);
         List<LandscapeResource> imageResources = landscape.getImageResources();
+        landscapeResources = landscape.getResources();
 
         for (int i = 0; i < imageResources.size(); ++i) {
             TextSliderView textSliderView = new TextSliderView(this);
@@ -92,5 +97,29 @@ public class LandscapeDetailActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onWikiButtonClick(View view) {
+        for (int i = 0; i < landscapeResources.size(); ++i)
+            if (landscapeResources.get(i).getType() == LandscapeResource.ResourceType.WIKIPEDIA) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(landscapeResources.get(i).getContent()));
+                startActivity(browserIntent);
+            }
+    }
+
+    public void onWebsiteButtonClick(View view) {
+        for (int i = 0; i < landscapeResources.size(); ++i)
+            if (landscapeResources.get(i).getType() == LandscapeResource.ResourceType.WEBSITE) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(landscapeResources.get(i).getContent()));
+                startActivity(browserIntent);
+            }
+    }
+
+    public void onYoutubeButtonClick(View view) {
+        for (int i = 0; i < landscapeResources.size(); ++i)
+            if (landscapeResources.get(i).getType() == LandscapeResource.ResourceType.YOUTUBE) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(landscapeResources.get(i).getContent()));
+                startActivity(browserIntent);
+            }
     }
 }

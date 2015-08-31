@@ -130,18 +130,17 @@ public class VisualSearchActivity extends Activity {
 
                 try {
                     key = ClientHelpers.recognizeLandscape(picturePath);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
+                } catch (IOException | InterruptedException | JSONException e) {
                     e.printStackTrace();
                 }
 
             }
 
             if (key != null) {
-                int id = Integer.parseInt(key);
+                int landscapeID = Integer.parseInt(key);
+                Intent intent = new Intent(this, LandscapeDetailActivity.class);
+                intent.putExtra("landscapeID", landscapeID);
+                startActivity(intent);
             }
         }
     }
