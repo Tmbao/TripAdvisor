@@ -1,5 +1,7 @@
 package app.tmbao.travel_assistance.invisible_components.client;
 
+import com.google.android.gms.maps.model.LatLng;
+
 /**
  * Created by tmbao on 8/25/2015.
  */
@@ -21,5 +23,11 @@ public class UrlHelpers {
 
     public static String getLandscapeUrl(int landscapeId) {
         return String.format("%s://%s/landscapes/%d", protocol, baseUrl, landscapeId);
+    }
+
+    public static String getDirectionsUrl(LatLng origin, LatLng dest) {
+        return String.format("https://maps.googleapis.com/maps/api/directions/json?origin=%f,%f&destination=%f,%f",
+                origin.latitude, origin.longitude,
+                dest.latitude, dest.longitude);
     }
 }

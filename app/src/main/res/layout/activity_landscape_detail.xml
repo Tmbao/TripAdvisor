@@ -81,6 +81,11 @@
                     android:layout_height="50dp"
                     android:src="@drawable/youtube_icon"
                     android:onClick="onYoutubeButtonClick"/>
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/google_icon"
+                    android:onClick="onDirectionButtonClick"/>
             </LinearLayout>
             <TextView
                 android:layout_width="match_parent"

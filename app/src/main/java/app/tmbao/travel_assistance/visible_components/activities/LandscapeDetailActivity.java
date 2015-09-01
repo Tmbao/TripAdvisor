@@ -122,4 +122,10 @@ public class LandscapeDetailActivity extends AppCompatActivity {
                 startActivity(browserIntent);
             }
     }
+
+    public void onDirectionButtonClick(View view) {
+        Intent intent = new Intent(this, MapsActivity.class);
+        intent.putExtra("landscapeID", landscapeID);
+        startActivity(intent);
+    }
 }
