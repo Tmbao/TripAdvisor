@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.daimajia.slider.library.Animations.DescriptionAnimation;
@@ -75,6 +78,56 @@ public class LandscapeDetailActivity extends AppCompatActivity {
 
         TextView textView = (TextView) findViewById(R.id.tvDescription);
         textView.setText(landscape.getDescription());
+
+        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.icon_container);
+
+        for (final LandscapeResource landscapeResource : landscapeResources) {
+            if (landscapeResource.getType() == LandscapeResource.ResourceType.YOUTUBE) {
+                ImageView youtubeIcon = new ImageView(this);
+                final float scale = this.getResources().getDisplayMetrics().density;
+                int pixels = (int) (50 * scale + 0.5f);
+                youtubeIcon.setLayoutParams(new ViewGroup.LayoutParams(pixels, pixels));
+                youtubeIcon.setImageResource(R.drawable.youtube_icon);
+                youtubeIcon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(landscapeResource.getContent()));
+                        startActivity(browserIntent);
+                    }
+                });
+                linearLayout.addView(youtubeIcon);
+            }
+            else if (landscapeResource.getType() == LandscapeResource.ResourceType.WIKIPEDIA) {
+                ImageView wikiIcon = new ImageView(this);
+                final float scale = this.getResources().getDisplayMetrics().density;
+                int pixels = (int) (50 * scale + 0.5f);
+                wikiIcon.setLayoutParams(new ViewGroup.LayoutParams(pixels, pixels));
+                wikiIcon.setImageResource(R.drawable.wiki_icon);
+                wikiIcon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(landscapeResource.getContent()));
+                        startActivity(browserIntent);
+                    }
+                });
+                linearLayout.addView(wikiIcon);
+            }
+            else if (landscapeResource.getType() == LandscapeResource.ResourceType.WEBSITE) {
+                ImageView websiteIcon = new ImageView(this);
+                final float scale = this.getResources().getDisplayMetrics().density;
+                int pixels = (int) (50 * scale + 0.5f);
+                websiteIcon.setLayoutParams(new ViewGroup.LayoutParams(pixels, pixels));
+                websiteIcon.setImageResource(R.drawable.website_icon);
+                websiteIcon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(landscapeResource.getContent()));
+                        startActivity(browserIntent);
+                    }
+                });
+                linearLayout.addView(websiteIcon);
+            }
+        }
     }
 
     @Override
@@ -97,30 +150,6 @@ public class LandscapeDetailActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public void onWikiButtonClick(View view) {
-        for (int i = 0; i < landscapeResources.size(); ++i)
-            if (landscapeResources.get(i).getType() == LandscapeResource.ResourceType.WIKIPEDIA) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(landscapeResources.get(i).getContent()));
-                startActivity(browserIntent);
-            }
-    }
-
-    public void onWebsiteButtonClick(View view) {
-        for (int i = 0; i < landscapeResources.size(); ++i)
-            if (landscapeResources.get(i).getType() == LandscapeResource.ResourceType.WEBSITE) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(landscapeResources.get(i).getContent()));
-                startActivity(browserIntent);
-            }
-    }
-
-    public void onYoutubeButtonClick(View view) {
-        for (int i = 0; i < landscapeResources.size(); ++i)
-            if (landscapeResources.get(i).getType() == LandscapeResource.ResourceType.YOUTUBE) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(landscapeResources.get(i).getContent()));
-                startActivity(browserIntent);
-            }
     }
 
     public void onDirectionButtonClick(View view) {
